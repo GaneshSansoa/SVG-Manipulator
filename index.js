@@ -4,7 +4,7 @@ const loadSvg = async () =>
   });
 let data = {};
 async function load() {
-  const data = await d3.xml("tshirt.svg");
+  const data = await d3.xml("csiback.svg");
   console.log(d3.xml("final_tshirt.svg"));
   d3.select("#svg-container1").node().append(data.documentElement);
 }
@@ -13,14 +13,19 @@ loadSvg();
 let groups = {};
 console.log(groups);
 $("#red").on("click", function () {
-  groups = $("#svg-container1 svg").find("g");
+  groups = $("#svg-container1 svg").find("path");
   console.log($("#tshirt_color"));
   //   $("#tshirt_color").css("fill", "red");
   //   $("#tshirt_shade path").css("fill", "blue");
   $.each(groups, function (index, group) {
     console.log($(group).attr("id"));
     let label = document.createElement("label");
-    label.innerHTML = $(group).data("name");
+    //label not working at some point
+    // label.innerHTML = $(group).data("name");
+
+    //shuffling with id
+    label.innerHTML = $(group).attr("id");
+
     let input = document.createElement("div");
     input.setAttribute("id", $(group).attr("id"));
     $(".color-palatter").append(label);
@@ -74,8 +79,19 @@ $("#red").on("click", function () {
     pickr.on("change", function (color, instance) {
       const svg_element = $("svg #" + $(group).attr("id"))[0];
       console.log(svg_element);
+      console.log($(svg_element).find("path").removeAttr("class"));
+      console.log($(svg_element).find("text").removeAttr("class"));
       $(svg_element).css("fill", color.toHEXA().toString());
       //   $("svg#" + $(group).attr("id"))[0].css("fill", color.toHEXA().toString());
     });
   });
 });
+function downloadSVG() {
+  const svg = document.getElementById("svg-container1").innerHTML;
+  const blob = new Blob([svg.toString()]);
+  const element = document.createElement("a");
+  element.download = "w3c.svg";
+  element.href = window.URL.createObjectURL(blob);
+  element.click();
+  element.remove();
+}
